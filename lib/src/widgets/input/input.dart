@@ -70,13 +70,20 @@ class _InputState extends State<Input> {
 
   bool _sendButtonVisible = false;
   late TextEditingController _textController;
+  bool _canDisposeTextController = false;
 
   @override
   void initState() {
     super.initState();
 
-    _textController =
-        widget.options.textEditingController ?? InputTextFieldController();
+    final fromOptions = widget.options.textEditingController;
+    if (fromOptions != null) {
+      _textController = fromOptions;
+      _canDisposeTextController = false;
+    } else {
+      _textController = InputTextFieldController();
+      _canDisposeTextController = true;
+    }
     _handleSendButtonVisibilityModeChange();
   }
 
@@ -243,7 +250,9 @@ class _InputState extends State<Input> {
   @override
   void dispose() {
     _inputFocusNode.dispose();
-    _textController.dispose();
+    if (_canDisposeTextController) {
+      _textController.dispose();
+    }
     super.dispose();
   }
 
