@@ -12,7 +12,7 @@ import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 import 'user_name.dart';
 
-const regexLink = r'\S*[:?.]\S*[/?=]\S*';
+const _regexLink = r'\S*[:?.]\S*[/?=]\S*';
 
 /// A class that represents text message widget with optional link preview.
 class TextMessage extends StatelessWidget {
@@ -159,7 +159,7 @@ class TextMessage extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     if (usePreviewData && onPreviewDataFetched != null) {
-      final urlRegexp = RegExp(regexLink, caseSensitive: false);
+      final urlRegexp = RegExp(_regexLink, caseSensitive: false);
       final matches = urlRegexp.allMatches(message.text);
 
       if (matches.isNotEmpty) {

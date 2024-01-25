@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
-    show regexEmail, regexLink;
+    show regexEmail;
+import 'package:flutter_link_previewer/flutter_link_previewer.dart'
+    as linkPreviewer;
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,7 +47,7 @@ MatchText urlMatcher({
           }
         }
       },
-      pattern: regexLink,
+      pattern: linkPreviewer.regexLink,
       style: style,
     );
 
