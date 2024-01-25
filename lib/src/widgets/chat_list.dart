@@ -247,12 +247,14 @@ class _ChatListState extends State<ChatList>
             });
 
             widget.onEndReached!().whenComplete(() {
-              _controller.duration = const Duration(milliseconds: 300);
-              _controller.reverse();
+              if (mounted) {
+                _controller.duration = const Duration(milliseconds: 300);
+                _controller.reverse();
 
-              setState(() {
-                _isNextPageLoading = false;
-              });
+                setState(() {
+                  _isNextPageLoading = false;
+                });
+              }
             });
           }
 
@@ -269,14 +271,17 @@ class _ChatListState extends State<ChatList>
             SliverPadding(
               padding: const EdgeInsets.only(bottom: 4),
               sliver: SliverToBoxAdapter(
-                child: widget.typingIndicatorOptions?.customTypingIndicator ??
-                    TypingIndicator(
-                      bubbleAlignment: widget.bubbleRtlAlignment,
-                      options: widget.typingIndicatorOptions!,
-                      showIndicator: (widget
-                              .typingIndicatorOptions!.typingUsers.isNotEmpty &&
-                          !_indicatorOnScrollStatus),
-                    ),
+                child: (widget.typingIndicatorOptions!.typingUsers.isNotEmpty &&
+                        !_indicatorOnScrollStatus)
+                    ? widget.typingIndicatorOptions?.customTypingIndicator ??
+                        TypingIndicator(
+                          bubbleAlignment: widget.bubbleRtlAlignment,
+                          options: widget.typingIndicatorOptions!,
+                          showIndicator: (widget.typingIndicatorOptions!
+                                  .typingUsers.isNotEmpty &&
+                              !_indicatorOnScrollStatus),
+                        )
+                    : const SizedBox.shrink(),
               ),
             ),
             SliverPadding(

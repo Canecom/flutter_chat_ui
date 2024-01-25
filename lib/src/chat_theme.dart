@@ -67,6 +67,8 @@ abstract class ChatTheme {
     required this.errorColor,
     required this.errorIcon,
     required this.inputBackgroundColor,
+    required this.inputSurfaceTintColor,
+    required this.inputElevation,
     required this.inputBorderRadius,
     this.inputContainerDecoration,
     required this.inputMargin,
@@ -78,6 +80,7 @@ abstract class ChatTheme {
     required this.messageBorderRadius,
     required this.messageInsetsHorizontal,
     required this.messageInsetsVertical,
+    required this.messageMaxWidth,
     required this.primaryColor,
     required this.receivedEmojiMessageTextStyle,
     this.receivedMessageBodyBoldTextStyle,
@@ -110,6 +113,7 @@ abstract class ChatTheme {
     required this.userAvatarNameColors,
     required this.userAvatarTextStyle,
     required this.userNameTextStyle,
+    this.highlightMessageColor,
   });
 
   /// Icon for select attachment button.
@@ -145,6 +149,11 @@ abstract class ChatTheme {
   /// Color of the bottom bar where text field is.
   final Color inputBackgroundColor;
 
+  /// Surface Tint Color of the bottom bar where text field is.
+  final Color inputSurfaceTintColor;
+
+  final double inputElevation;
+
   /// Top border radius of the bottom bar where text field is.
   final BorderRadius inputBorderRadius;
 
@@ -177,6 +186,9 @@ abstract class ChatTheme {
 
   /// Vertical message bubble insets.
   final double messageInsetsVertical;
+
+  /// Message bubble max width. set to [double.infinity] adaptive screen.
+  final double messageMaxWidth;
 
   /// Primary color of the chat used as a background of sent messages
   /// and statuses.
@@ -289,6 +301,9 @@ abstract class ChatTheme {
 
   /// User names text style. Color will be overwritten with [userAvatarNameColors].
   final TextStyle userNameTextStyle;
+
+  /// Color used as background of message row on highligth.
+  final Color? highlightMessageColor;
 }
 
 /// Default chat theme which extends [ChatTheme].
@@ -322,6 +337,8 @@ class DefaultChatTheme extends ChatTheme {
     super.errorColor = error,
     super.errorIcon,
     super.inputBackgroundColor = neutral0,
+    super.inputSurfaceTintColor = neutral0,
+    super.inputElevation = 0,
     super.inputBorderRadius = const BorderRadius.vertical(
       top: Radius.circular(20),
     ),
@@ -343,6 +360,7 @@ class DefaultChatTheme extends ChatTheme {
     super.messageBorderRadius = 20,
     super.messageInsetsHorizontal = 20,
     super.messageInsetsVertical = 16,
+    super.messageMaxWidth = 440,
     super.primaryColor = primary,
     super.receivedEmojiMessageTextStyle = const TextStyle(fontSize: 40),
     super.receivedMessageBodyBoldTextStyle,
@@ -457,6 +475,7 @@ class DefaultChatTheme extends ChatTheme {
       fontWeight: FontWeight.w800,
       height: 1.333,
     ),
+    super.highlightMessageColor,
   });
 }
 
@@ -491,6 +510,8 @@ class DarkChatTheme extends ChatTheme {
     super.errorColor = error,
     super.errorIcon,
     super.inputBackgroundColor = secondaryDark,
+    super.inputSurfaceTintColor = secondaryDark,
+    super.inputElevation = 0,
     super.inputBorderRadius = const BorderRadius.vertical(
       top: Radius.circular(20),
     ),
@@ -512,6 +533,7 @@ class DarkChatTheme extends ChatTheme {
     super.messageBorderRadius = 20,
     super.messageInsetsHorizontal = 20,
     super.messageInsetsVertical = 16,
+    super.messageMaxWidth = 440,
     super.primaryColor = primary,
     super.receivedEmojiMessageTextStyle = const TextStyle(fontSize: 40),
     super.receivedMessageBodyBoldTextStyle,
@@ -626,5 +648,6 @@ class DarkChatTheme extends ChatTheme {
       fontWeight: FontWeight.w800,
       height: 1.333,
     ),
+    super.highlightMessageColor,
   });
 }

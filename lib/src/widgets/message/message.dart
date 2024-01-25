@@ -48,6 +48,7 @@ class Message extends StatelessWidget {
     required this.showAvatar,
     required this.showName,
     required this.showStatus,
+    required this.isLeftStatus,
     required this.showUserAvatars,
     this.textMessageBuilder,
     required this.textMessageOptions,
@@ -62,7 +63,7 @@ class Message extends StatelessWidget {
 
   /// This is to allow custom user avatar builder
   /// By using this we can fetch newest user info based on id.
-  final Widget Function(String userId)? avatarBuilder;
+  final Widget Function(types.User author)? avatarBuilder;
 
   /// Customize the default bubble using this function. `child` is a content
   /// you should render inside your bubble, `message` is a current message
@@ -160,6 +161,12 @@ class Message extends StatelessWidget {
   /// Show message's status.
   final bool showStatus;
 
+  /// This is used to determine if the status icon should be on the left or
+  /// right side of the message.
+  /// This is only used when [showStatus] is true.
+  /// Defaults to false.
+  final bool isLeftStatus;
+
   /// Show user avatars for received messages. Useful for a group chat.
   final bool showUserAvatars;
 
@@ -184,7 +191,7 @@ class Message extends StatelessWidget {
       videoMessageBuilder;
 
   Widget _avatarBuilder() => showAvatar
-      ? avatarBuilder?.call(message.author.id) ??
+      ? avatarBuilder?.call(message.author) ??
           UserAvatar(
             author: message.author,
             bubbleRtlAlignment: bubbleRtlAlignment,
@@ -277,6 +284,23 @@ class Message extends StatelessWidget {
     }
   }
 
+  Widget _statusIcon(
+    BuildContext context,
+  ) {
+    if (!showStatus) return const SizedBox.shrink();
+
+    return Padding(
+      padding: InheritedChatTheme.of(context).theme.statusIconPadding,
+      child: GestureDetector(
+        onLongPress: () => onMessageStatusLongPress?.call(context, message),
+        onTap: () => onMessageStatusTap?.call(context, message),
+        child: customStatusBuilder != null
+            ? customStatusBuilder!(message, context: context)
+            : MessageStatus(status: message.status),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final query = MediaQuery.of(context);
@@ -340,6 +364,7 @@ class Message extends StatelessWidget {
             : TextDirection.ltr,
         children: [
           if (!currentUserIsAuthor && showUserAvatars) _avatarBuilder(),
+          if (currentUserIsAuthor && isLeftStatus) _statusIcon(context),
           ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: messageWidth.toDouble(),
@@ -376,20 +401,7 @@ class Message extends StatelessWidget {
               ],
             ),
           ),
-          if (currentUserIsAuthor)
-            Padding(
-              padding: InheritedChatTheme.of(context).theme.statusIconPadding,
-              child: showStatus
-                  ? GestureDetector(
-                      onLongPress: () =>
-                          onMessageStatusLongPress?.call(context, message),
-                      onTap: () => onMessageStatusTap?.call(context, message),
-                      child: customStatusBuilder != null
-                          ? customStatusBuilder!(message, context: context)
-                          : MessageStatus(status: message.status),
-                    )
-                  : null,
-            ),
+          if (currentUserIsAuthor && !isLeftStatus) _statusIcon(context),
         ],
       ),
     );
